@@ -26,7 +26,7 @@ public class CodeBreaker {
         boolean again = false;
 
         // The game
-        while (true) {
+        while (currentTurn < MAX_GUESSES) {
             if (again) {
                 System.out.printf("Please enter your guess again of %d using the letters %s:\n", CODE_LENGTH, COLOURS);
             } else {
@@ -102,6 +102,17 @@ public class CodeBreaker {
     }
 
     public static void displayGame(String[][] guesses, String[][] clues) {
-
+        System.out.println("Guess\tClues");
+        System.out.println("****************");
+        for (int i = 0; i <= currentTurn; i++) {
+            for (int j = 0; j < CODE_LENGTH; j++) {
+                System.out.printf("%s ", guesses[i][j]);
+            }
+            System.out.printf("\t");
+            for (int j = 0; j < CODE_LENGTH; j++) {
+                System.out.printf("%s ", clues[i][j]);
+            }
+            System.out.println();
+        }
     }
 }

@@ -55,17 +55,40 @@ public class CodeBreaker {
                 continue;
             }
 
+            // Check if guess is correct
+            if (valid(secretCode, guess, guess.length())) {
+                break;
+            }
+
             // Add guess
             for (int i = 0; i < guess.length(); i++) {
                 guesses[currentTurn][i] = "" + guess.charAt(i);
             }
 
             // Generate clue
+            String[] guessArr = new String[guess.length()];
+            for (int i = 0; i < guess.length(); i++) {
+                guessArr[i] = "" +guess.charAt(i);
+            }
+
+            int iter = 0;
+            for (String s : findFullyCorrect(secretCode, guessArr)) {
+                guesses[currentTurn][iter] = s;
+                iter++;
+            }
+            for (String s : removeFullyCorrect(secretCode, guessArr)) {
+                guesses[currentTurn][iter] = s;
+                iter++;
+            }
+            for (String s : findColourCorrect(secretCode, guessArr)) {
+                guesses[currentTurn][iter] = s;
+                iter++;
+            }
 
             // Display
             displayGame(guesses, clues);
 
-            currentTurn++; // Increase the turn since it was valid
+            currentTurn++; // Increase the turn since it finished
         }
 
         // End game
@@ -95,44 +118,51 @@ public class CodeBreaker {
      * @returns valid
      */
     public static boolean valid(String[] code, String guess, int length) {
-
+        for (int i = 0; i < length; i++) {
+            if (!code[i].equals("" + guess.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public static List<String> findFullyCorrect(String[] code, String[] guess) {
+    public static String[] findFullyCorrect(String[] code, String[] guess) {
         List<String> characters = new ArrayList<>();
         for (int i = 0; i < code.length; i++) {
             if (code[i].equalsIgnoreCase(guess[i])) {
-                characters.add("B");
+                characters.add("b");
             }
         }
-        return characters;
+        return characters.toArray(new String[0]);
     }
 
-    public static List<String> removeFullyCorrect(String[] arr1, String[] arr2) {
+    public static String[] removeFullyCorrect(String[] arr1, String[] arr2) {
         List<String> characters = new ArrayList<>();
         for (int i = 0; i < arr1.length; i++) {
             if (!arr1[i].equalsIgnoreCase(arr2[i])) {
                 characters.add(arr1[i]);
             }
         }
-        return characters;
+        return characters.toArray(new String[0]);
     }
 
-    public static List<String> findColourCorrect(String[] arr1, String[] arr2) {
+    public static String[] findColourCorrect(String[] arr1, String[] arr2) {
         List<String> characters = new ArrayList<>();
-        for (int i = 0; i < code.length; i++) { //TODO
-            if (code[i].equalsIgnoreCase(guess[i])) {
-                characters.add('b');
+        Set<String> charactersCheck = new HashSet<>(), arr2set = new HashSet<>(Arrays.asList(arr2));
+        for (int i = 0; i < arr1.length; i++) {
+            if (!charactersCheck.contains(arr1[i]) && arr2set.contains(arr1[i]) && !arr1[i].equals(arr2[i])) {
+                characters.add("w");
+                charactersCheck.add(arr1[i]);
             }
         }
-        return characters;
+        return characters.toArray(new String[0]);
     }
 
     /*
      * Displays the game board in console.
      * @param guesses the game board for the guesses
      * @param clues the game board for the clues
-     * @returns nothing
+     * @return nothing
      */
 
     public static void displayGame(String[][] guesses, String[][] clues) {

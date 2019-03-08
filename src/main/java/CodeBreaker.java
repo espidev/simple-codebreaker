@@ -34,30 +34,22 @@ public class CodeBreaker {
             again = false;
             String guess = scan.nextLine();
 
+            String[] guessArr = new String[guess.length()];
+            for (int i = 0; i < guess.length(); i++) {
+                guessArr[i] = "" + guess.charAt(i);
+            }
+
             // check validity of code
-            if (guess.length() != CODE_LENGTH) {
-                System.out.println("Your guess has an invalid length!");
-                sleep(500);
-                again = true;
-                continue;
-            }
-            boolean exit = false;
-            for (char ch : guess.toCharArray()) { // check if each character is a valid colour
-                if (!COLOURS.contains("" + ch)) {
-                    exit = true;
-                    break;
-                }
-            }
-            if (exit) { // exit if a character is not a valid colour
-                System.out.println("Invalid character in your guess!");
+            if (!valid(guessArr, COLOURS, CODE_LENGTH)) {
+                System.out.println("Invalid guess!");
                 sleep(500);
                 again = true;
                 continue;
             }
 
             // Check if guess is correct
-            if (valid(secretCode, guess, guess.length())) {
-                break;
+            if (correctGuess(secretCode, guess)) {
+                break; // exit game if guess is correct
             }
 
             // Add guess
@@ -66,22 +58,19 @@ public class CodeBreaker {
             }
 
             // Generate clue
-            String[] guessArr = new String[guess.length()];
-            for (int i = 0; i < guess.length(); i++) {
-                guessArr[i] = "" +guess.charAt(i);
-            }
 
             int iter = 0;
             for (String s : findFullyCorrect(secretCode, guessArr)) {
-                guesses[currentTurn][iter] = s;
+                clues[currentTurn][iter] = s;
                 iter++;
             }
             for (String s : removeFullyCorrect(secretCode, guessArr)) {
-                guesses[currentTurn][iter] = s;
+                clues[currentTurn][iter] = s;
                 iter++;
             }
             for (String s : findColourCorrect(secretCode, guessArr)) {
-                guesses[currentTurn][iter] = s;
+                if (iter >= CODE_LENGTH) break;
+                clues[currentTurn][iter] = s;
                 iter++;
             }
 
@@ -97,7 +86,7 @@ public class CodeBreaker {
             for (String s : secretCode) code.append(s);
             System.out.printf("I'm sorry you lose. The correct code was %s\n", code.toString());
         } else { // Win
-            System.out.printf("Congratulations! It took you %s guesses to find the code.", currentTurn+1);
+            System.out.printf("Congratulations! It took you %d guesses to find the code.", currentTurn+1);
         }
     }
 
@@ -118,18 +107,47 @@ public class CodeBreaker {
     	return code;
     }
 
-    /*
-     * Check if pattern is correct
-     * @returns valid
+    /**
+     * Check if guess is valid
+     * @param colours all of the valid colours
+     * @param guess guess
+     * @return boolean whether or not it is valid
      */
-    public static boolean valid(String[] code, String guess, int length) {
-        for (int i = 0; i < length; i++) {
+
+    public static boolean valid(String[] guess, String colours, int length) {
+        if (length != guess.length) {
+            return false;
+        }
+        for (String s : guess) {
+            if (!colours.contains(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if guess is equal to the secret code
+     * @param code secret code
+     * @param guess guess
+     * @return boolean whether or not the guess is correct
+     */
+
+    public static boolean correctGuess(String[] code, String guess) {
+        for (int i = 0; i < code.length; i++) {
             if (!code[i].equals("" + guess.charAt(i))) {
                 return false;
             }
         }
         return true;
     }
+
+    /**
+     * Find the number of colours in a guess that are correct.
+     * @param code the secret code
+     * @param guess the guess
+     * @return String[] returns an array of 'b' representing each colour that is correct and in the correct position
+     */
 
     public static String[] findFullyCorrect(String[] code, String[] guess) {
         List<String> characters = new ArrayList<>();
@@ -141,33 +159,46 @@ public class CodeBreaker {
         return characters.toArray(new String[0]);
     }
 
-    public static String[] removeFullyCorrect(String[] arr1, String[] arr2) {
+    /**
+     * Find the colours in a guess that are incorrect or in the wrong position.
+     * @param code the code that is being guessed
+     * @param guess the guess
+     * @return String[] returns an array of characters representing colours that are not correctly guessed
+     */
+
+    public static String[] removeFullyCorrect(String[] code, String[] guess) { // TODO
         List<String> characters = new ArrayList<>();
-        for (int i = 0; i < arr1.length; i++) {
-            if (!arr1[i].equalsIgnoreCase(arr2[i])) {
-                characters.add(arr1[i]);
+        for (int i = 0; i < guess.length; i++) {
+            if (!code[i].equalsIgnoreCase(guess[i])) {
+                characters.add(guess[i]);
             }
         }
         return characters.toArray(new String[0]);
     }
 
-    public static String[] findColourCorrect(String[] arr1, String[] arr2) {
+    /**
+     * Find the number of colours that are correct but in the wrong position.
+     * @param code the code that is being guessed
+     * @param guess the guess
+     * @return String[] returns an array of 'w' representing each colour that is correct but in the wrong position
+     */
+
+    public static String[] findColourCorrect(String[] code, String[] guess) {
         List<String> characters = new ArrayList<>();
-        Set<String> charactersCheck = new HashSet<>(), arr2set = new HashSet<>(Arrays.asList(arr2));
-        for (int i = 0; i < arr1.length; i++) {
-            if (!charactersCheck.contains(arr1[i]) && arr2set.contains(arr1[i]) && !arr1[i].equals(arr2[i])) {
+        Set<String> noDuplicates = new HashSet<>(), arr2set = new HashSet<>(Arrays.asList(guess));
+        for (int i = 0; i < code.length; i++) {
+            if (!noDuplicates.contains(code[i]) && arr2set.contains(code[i]) && !code[i].equals(guess[i])) {
                 characters.add("w");
-                charactersCheck.add(arr1[i]);
+                noDuplicates.add(code[i]);
             }
         }
         return characters.toArray(new String[0]);
     }
 
-    /*
+    /**
      * Displays the game board in console.
      * @param guesses the game board for the guesses
      * @param clues the game board for the clues
-     * @return nothing
      */
 
     public static void displayGame(String[][] guesses, String[][] clues) {
@@ -177,7 +208,7 @@ public class CodeBreaker {
             for (int j = 0; j < CODE_LENGTH; j++) {
                 System.out.printf("%s ", guesses[i][j]);
             }
-            System.out.printf("\t");
+            System.out.print("\t");
             for (int j = 0; j < CODE_LENGTH; j++) {
                 System.out.printf("%s ", clues[i][j]);
             }

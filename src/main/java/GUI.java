@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GUI extends JFrame implements ActionListener{
 	//Create some panels
@@ -31,7 +32,11 @@ public class GUI extends JFrame implements ActionListener{
     public static void main(String[] args){
     	GUI frame1 = new GUI();  //Start the GUI
     }
-    
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
 }
 		
 		

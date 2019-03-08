@@ -110,7 +110,12 @@ public class CodeBreaker {
     }
 
     public static String[] createCode(String colours, int size) {
-
+    	String[] code = new String[size];
+    	for(int i = 0; i < size; i++){
+    		int num = (int) (Math.random() * colours.length());
+    		code[i] = "" + colours.charAt(num);
+    	}
+    	return code;
     }
 
     /*

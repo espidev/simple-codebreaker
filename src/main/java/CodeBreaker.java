@@ -11,6 +11,11 @@ public class CodeBreaker {
 
     static String[][] clues = new String[MAX_GUESSES][CODE_LENGTH], guesses = new String[MAX_GUESSES][CODE_LENGTH];
 
+    /**
+     * Main method of execution
+     * @param args not used
+     */
+
     public static void main(String[] args) {
 
         System.out.println("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Welcome to Code Breaker! ✧ﾟ･: *ヽ(◕ヮ◕ヽ)");
@@ -90,6 +95,11 @@ public class CodeBreaker {
         }
     }
 
+    /**
+     * Helper method to pause thread for specified time
+     * @param millis milliseconds to sleep for
+     */
+
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
@@ -97,6 +107,13 @@ public class CodeBreaker {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Generate a code with given colours and size
+     * @param colours all of the colour names as characters in a string
+     * @param size amount of colours
+     * @return String[] the generated code
+     */
 
     public static String[] createCode(String colours, int size) {
     	String[] code = new String[size];

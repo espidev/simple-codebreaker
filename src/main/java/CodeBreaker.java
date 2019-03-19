@@ -37,8 +37,9 @@ public class CodeBreaker {
                 System.out.printf("Please enter your guess of %d using the letters %s:\n", CODE_LENGTH, COLOURS);
             }
             again = false;
-            String guess = scan.nextLine();
+            String guess = scan.nextLine(); // Get input from user
 
+            // Convert String to single character String[]
             String[] guessArr = new String[guess.length()];
             for (int i = 0; i < guess.length(); i++) {
                 guessArr[i] = "" + guess.charAt(i);
@@ -57,13 +58,25 @@ public class CodeBreaker {
                 break; // exit game if guess is correct
             }
 
-            // Add guess
+            // Add guess to guesses array
             for (int i = 0; i < guess.length(); i++) {
                 guesses[currentTurn][i] = "" + guess.charAt(i);
             }
 
             // Generate clue
 
+            HashSet<String> codeSet = new HashSet<>(Arrays.asList(secretCode));
+            for (int i = 0; i < guessArr.length; i++) {
+                if (guessArr[i].equalsIgnoreCase(secretCode[i])) {
+                    clues[currentTurn][i] = "b";
+                } else if (codeSet.contains(guessArr[i])){
+                    clues[currentTurn][i] = "w";
+                } else {
+                    clues[currentTurn][i] = "-";
+                }
+            }
+
+            /*
             int iter = 0;
             for (String s : findFullyCorrect(secretCode, guessArr)) {
                 clues[currentTurn][iter] = s;
@@ -77,16 +90,16 @@ public class CodeBreaker {
                 if (iter >= CODE_LENGTH) break;
                 clues[currentTurn][iter] = s;
                 iter++;
-            }
+            }*/
 
-            // Display
+            // Display to console
             displayGame(guesses, clues);
 
             currentTurn++; // Increase the turn since it finished
         }
 
         // End game
-        if (currentTurn == MAX_GUESSES) { // Loss
+        if (currentTurn == MAX_GUESSES) { // Loss (maximum amount of turns)
             StringBuilder code = new StringBuilder();
             for (String s : secretCode) code.append(s);
             System.out.printf("I'm sorry you lose. The correct code was %s\n", code.toString());

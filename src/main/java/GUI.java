@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-public class GUI extends JFrame implements ActionListener{
+public class GUI extends JFrame {
 	//Create some panels
 	JPanel pan1 = new JPanel();
 	JPanel pan2 = new JPanel();

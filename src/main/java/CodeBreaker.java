@@ -64,25 +64,9 @@ public class CodeBreaker {
             }
 
             // Generate clue
-
-            HashSet<String> codeSet = new HashSet<>(Arrays.asList(secretCode));
-            for (int i = 0; i < guessArr.length; i++) {
-                if (guessArr[i].equalsIgnoreCase(secretCode[i])) {
-                    clues[currentTurn][i] = "b";
-                } else if (codeSet.contains(guessArr[i])){
-                    clues[currentTurn][i] = "w";
-                } else {
-                    clues[currentTurn][i] = "-";
-                }
-            }
-
-            /*
+            
             int iter = 0;
             for (String s : findFullyCorrect(secretCode, guessArr)) {
-                clues[currentTurn][iter] = s;
-                iter++;
-            }
-            for (String s : removeFullyCorrect(secretCode, guessArr)) {
                 clues[currentTurn][iter] = s;
                 iter++;
             }
@@ -90,7 +74,7 @@ public class CodeBreaker {
                 if (iter >= CODE_LENGTH) break;
                 clues[currentTurn][iter] = s;
                 iter++;
-            }*/
+            }
 
             // Display to console
             displayGame(guesses, clues);
@@ -214,12 +198,13 @@ public class CodeBreaker {
      */
 
     public static String[] findColourCorrect(String[] code, String[] guess) {
+    	String[] acceptedChars = removeFullyCorrect(code, guess);
+    	
         List<String> characters = new ArrayList<>();
-        Set<String> noDuplicates = new HashSet<>(), arr2set = new HashSet<>(Arrays.asList(guess));
+        Set<String> arr2set = new HashSet<>(Arrays.asList(acceptedChars)), guessSet = new HashSet<>(Arrays.asList(guess));
         for (int i = 0; i < code.length; i++) {
-            if (!noDuplicates.contains(code[i]) && arr2set.contains(code[i]) && !code[i].equals(guess[i])) {
+            if (arr2set.contains(code[i]) && guessSet.contains(code[i]) && !code[i].equals(guess[i])) {
                 characters.add("w");
-                noDuplicates.add(code[i]);
             }
         }
         return characters.toArray(new String[0]);
@@ -232,14 +217,15 @@ public class CodeBreaker {
      */
 
     public static void displayGame(String[][] guesses, String[][] clues) {
-        System.out.println("Guess\tClues");
+        System.out.println("Guess\tClues"); // header
         System.out.println("****************");
         for (int i = 0; i <= currentTurn; i++) {
-            for (int j = 0; j < CODE_LENGTH; j++) {
+            for (int j = 0; j < CODE_LENGTH; j++) { // guesses row
                 System.out.printf("%s ", guesses[i][j]);
             }
             System.out.print("\t");
-            for (int j = 0; j < CODE_LENGTH; j++) {
+            for (int j = 0; j < CODE_LENGTH; j++) { // clues row
+            	if (clues[i][j] == null) continue;
                 System.out.printf("%s ", clues[i][j]);
             }
             System.out.println();

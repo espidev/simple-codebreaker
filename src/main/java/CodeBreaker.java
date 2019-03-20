@@ -1,15 +1,15 @@
 import java.util.*;
 
 public class CodeBreaker {
-    static final int CODE_LENGTH = 4, MAX_GUESSES = 10;
-    static final String COLOURS = "GRBYOP";
+    static final int CODE_LENGTH = 4, TRIES = 10;
+    static final String VALID_CHARS = "GRBYOP";
 
     static Scanner scan = new Scanner(System.in);
 
     static int currentTurn = 0;
     static String[] secretCode;
 
-    static String[][] clues = new String[MAX_GUESSES][CODE_LENGTH], guesses = new String[MAX_GUESSES][CODE_LENGTH];
+    static String[][] clues = new String[TRIES][CODE_LENGTH], guesses = new String[TRIES][CODE_LENGTH];
 
     /**
      * Main method of execution
@@ -21,7 +21,7 @@ public class CodeBreaker {
         System.out.println("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Welcome to Code Breaker! ✧ﾟ･: *ヽ(◕ヮ◕ヽ)");
         sleep(2000);
         System.out.println("Creating secret magic code...");
-        secretCode = createCode(COLOURS, CODE_LENGTH);
+        secretCode = createCode(VALID_CHARS, CODE_LENGTH);
         sleep(1500);
         System.out.println("Polishing the magic code...");
         sleep(1000);
@@ -30,11 +30,11 @@ public class CodeBreaker {
         boolean again = false;
 
         // The game
-        while (currentTurn < MAX_GUESSES) {
+        while (currentTurn < TRIES) {
             if (again) {
-                System.out.printf("Please enter your guess again of %d using the letters %s:\n", CODE_LENGTH, COLOURS);
+                System.out.printf("Please enter your guess again of %d using the letters %s:\n", CODE_LENGTH, VALID_CHARS);
             } else {
-                System.out.printf("Please enter your guess of %d using the letters %s:\n", CODE_LENGTH, COLOURS);
+                System.out.printf("Please enter your guess of %d using the letters %s:\n", CODE_LENGTH, VALID_CHARS);
             }
             again = false;
             String guess = scan.nextLine(); // Get input from user
@@ -46,7 +46,7 @@ public class CodeBreaker {
             }
 
             // check validity of code
-            if (!valid(guessArr, COLOURS, CODE_LENGTH)) {
+            if (!valid(guessArr, VALID_CHARS, CODE_LENGTH)) {
                 System.out.println("Invalid guess!");
                 sleep(500);
                 again = true;
@@ -99,7 +99,7 @@ public class CodeBreaker {
         }
 
         // End game
-        if (currentTurn == MAX_GUESSES) { // Loss (maximum amount of turns)
+        if (currentTurn == TRIES) { // Loss (maximum amount of turns)
             StringBuilder code = new StringBuilder();
             for (String s : secretCode) code.append(s);
             System.out.printf("I'm sorry you lose. The correct code was %s\n", code.toString());

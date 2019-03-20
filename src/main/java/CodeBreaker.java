@@ -1,3 +1,10 @@
+/*
+ * Project: Code Breaker
+ * By: Raz Ben Haim and Devin Lin
+ * Course: ICS4U
+ * Teacher: Mr. A
+ * Date: March 22, Friday
+ */
 import java.util.*;
 
 public class CodeBreaker {
@@ -17,7 +24,7 @@ public class CodeBreaker {
      */
 
     public static void main(String[] args) {
-
+    	//Welcome message...
         System.out.println("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Welcome to Code Breaker! ✧ﾟ･: *ヽ(◕ヮ◕ヽ)");
         sleep(2000);
         System.out.println("Creating secret magic code...");
@@ -113,12 +120,12 @@ public class CodeBreaker {
      */
 
     public static String[] createCode(String colours, int size) {
-    	String[] code = new String[size];
-    	for(int i = 0; i < size; i++){
+    	String[] code = new String[size]; //Store the randomly generated code by the computer
+    	for(int i = 0; i < size; i++){ //generate 4 random characters
     		int num = (int) (Math.random() * colours.length());
     		code[i] = "" + colours.charAt(num);
     	}
-    	return code;
+    	return code; //return the code sequence
     }
 
     /**

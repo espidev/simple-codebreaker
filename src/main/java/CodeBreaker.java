@@ -92,7 +92,7 @@ public class CodeBreaker {
         // End game
         if (currentTurn == TRIES) { // Loss (maximum amount of turns)
             StringBuilder code = new StringBuilder(); //StringBuilder objects are like String objects, except that they can be modified
-            for (String s : secretCode) code.append(s); //
+            for (String s : secretCode) code.append(s); // add s to code (more efficient than +=)
             System.out.printf("I'm sorry you lose. The correct code was %s\n", code.toString());
         } else { // Win
             System.out.printf("Congratulations! It took you %d guesses to find the code.", currentTurn+1);
@@ -135,14 +135,11 @@ public class CodeBreaker {
      * @return boolean whether or not it is valid
      */
 
-    public static boolean valid(String[] guess, String colours, int length) { //validate guess
-        if (length != guess.length) {
-            return false;
-        }
+    public static boolean valid(String[] guess, String colours, int length) { 
+        if (length != guess.length) return false; // check length
+        
         for (String s : guess) {
-            if (!colours.contains(s)) {
-                return false;
-            }
+            if (!colours.contains(s)) return false; // check if each colour in guess is a valid colour
         }
         return true;
     }
@@ -156,8 +153,8 @@ public class CodeBreaker {
 
     public static boolean correctGuess(String[] code, String guess) {
         for (int i = 0; i < code.length; i++) {
-            if (!code[i].equals("" + guess.charAt(i))) {
-                return false;
+            if (!code[i].equals("" + guess.charAt(i))) { 
+                return false; // exit if character in guess doesn't match code
             }
         }
         return true;
@@ -173,7 +170,7 @@ public class CodeBreaker {
     public static String[] findFullyCorrect(String[] code, String[] guess) {
         List<String> characters = new ArrayList<>();
         for (int i = 0; i < code.length; i++) {
-            if (code[i].equalsIgnoreCase(guess[i])) {
+            if (code[i].equalsIgnoreCase(guess[i])) { // if character in guess matches code
                 characters.add("b");
             }
         }
@@ -187,11 +184,11 @@ public class CodeBreaker {
      * @return String[] returns an array of characters representing colours that are not correctly guessed
      */
 
-    public static String[] removeFullyCorrect(String[] code, String[] guess) { // TODO
+    public static String[] removeFullyCorrect(String[] code, String[] guess) { 
         List<String> characters = new ArrayList<>();
         for (int i = 0; i < guess.length; i++) {
-            if (!code[i].equalsIgnoreCase(guess[i])) {
-                characters.add(guess[i]);
+            if (!code[i].equalsIgnoreCase(guess[i])) { // if character in guess doesn't match code
+                characters.add(guess[i]); 
             }
         }
         return characters.toArray(new String[0]);
@@ -205,12 +202,15 @@ public class CodeBreaker {
      */
 
     public static String[] findColourCorrect(String[] code, String[] guess) {
-    	String[] acceptedChars = removeFullyCorrect(code, guess);
+    	String[] acceptedChars = removeFullyCorrect(code, guess); // acceptable characters for return 
     	
-        List<String> characters = new ArrayList<>();
+        List<String> characters = new ArrayList<>(); // return array
         Set<String> arr2set = new HashSet<>(Arrays.asList(acceptedChars)), guessSet = new HashSet<>(Arrays.asList(guess));
+        // Use set for fast .contains method
         for (int i = 0; i < code.length; i++) {
             if (arr2set.contains(code[i]) && guessSet.contains(code[i]) && !code[i].equals(guess[i])) {
+                // if this code character is an acceptable character and the guess contains the character somewhere
+                // and is not correct (not equal to guess character)
                 characters.add("w");
             }
         }

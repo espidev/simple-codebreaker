@@ -9,7 +9,7 @@ import java.util.*;
 
 public class CodeBreaker {
     static final int CODE_LENGTH = 4, TRIES = 10;
-    static final String VALID_CHARS = "GRBYOP";
+    static final String VALID_CHARS = "GRBYOP"; //Stores the possible colors that the user can enter
 
     static Scanner scan = new Scanner(System.in);
 
@@ -25,8 +25,8 @@ public class CodeBreaker {
 
     public static void main(String[] args) {
     	//Welcome message...
-        System.out.println("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Welcome to Code Breaker! ✧ﾟ･: *ヽ(◕ヮ◕ヽ)");
-        sleep(2000);
+        System.out.println("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Welcome to Code Breaker! ✧ﾟ･: *ヽ(◕ヮ◕ヽ)"); //welcome message
+        sleep(2000); //wait 2000ms (or 2s)
         System.out.println("Creating secret magic code...");
         secretCode = createCode(VALID_CHARS, CODE_LENGTH);
         sleep(1500);
@@ -34,7 +34,7 @@ public class CodeBreaker {
         sleep(1000);
         System.out.println("Done!");
 
-        boolean again = false;
+        boolean again = false; //Used to tell the user when to enter the code again
 
         // The game
         while (currentTurn < TRIES) {
@@ -91,8 +91,8 @@ public class CodeBreaker {
 
         // End game
         if (currentTurn == TRIES) { // Loss (maximum amount of turns)
-            StringBuilder code = new StringBuilder();
-            for (String s : secretCode) code.append(s);
+            StringBuilder code = new StringBuilder(); //StringBuilder objects are like String objects, except that they can be modified
+            for (String s : secretCode) code.append(s); //
             System.out.printf("I'm sorry you lose. The correct code was %s\n", code.toString());
         } else { // Win
             System.out.printf("Congratulations! It took you %d guesses to find the code.", currentTurn+1);
@@ -104,7 +104,7 @@ public class CodeBreaker {
      * @param millis milliseconds to sleep for
      */
 
-    public static void sleep(long millis) {
+    public static void sleep(long millis) { 
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -135,7 +135,7 @@ public class CodeBreaker {
      * @return boolean whether or not it is valid
      */
 
-    public static boolean valid(String[] guess, String colours, int length) {
+    public static boolean valid(String[] guess, String colours, int length) { //validate guess
         if (length != guess.length) {
             return false;
         }
@@ -226,7 +226,7 @@ public class CodeBreaker {
     public static void displayGame(String[][] guesses, String[][] clues) {
         System.out.println("Guess\tClues"); // header
         System.out.println("****************");
-        for (int i = 0; i <= currentTurn; i++) {
+        for (int i = 0; i <= currentTurn; i++) { //Repeat based on the number of total turns the user had 
             for (int j = 0; j < CODE_LENGTH; j++) { // guesses row
                 System.out.printf("%s ", guesses[i][j]);
             }
